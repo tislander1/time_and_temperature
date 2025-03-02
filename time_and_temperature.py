@@ -49,4 +49,8 @@ spaceweather_observed = '; '.join(spaceweather_observed.split('\n'))
 print('Observed aurora: ' + spaceweather_observed)
 print('Predicted aurora: ' + spaceweather_predicted)
 
+url_nationalday = 'https://www.daysoftheyear.com/today/'
+nationalday_page = s.get(url_nationalday)
+national_days = nationalday_page.html.find('div.banner__content')[0].text
+print(national_days)
 x = 2
