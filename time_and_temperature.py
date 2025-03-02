@@ -3,8 +3,7 @@ from requests_html import HTMLSession
 
 
 s = HTMLSession()
-lat = 40
-long = -102
+lat, long = 40, -102
 
 url_time = 'https://www.timeanddate.com/worldclock/@' + str(lat) + ',' + str(long)
 url_weather = 'https://forecast.weather.gov/MapClick.php?lat=' + str(lat) + '&lon=' + str(long)
@@ -20,16 +19,14 @@ print(date)
 weather_page = s.get(url_weather)
 current_weather = weather_page.html.find('p.myforecast-current')[0].text
 current_temp = weather_page.html.find('p.myforecast-current-lrg')[0].text
-current_weather_details = weather_page.html.find('div#current_conditions_detail')[0].text
-current_weather_dict = {}
-details = current_weather_details.split('\n')
-print('Weather: ' + current_weather + ' and ' + current_temp)
-
-for ix in range(0, len(details), 2):
-    current_weather_dict[details[ix]] = details[ix+1]
-for key in current_weather_dict:
-    if key not in ['Last update']:
-        print(key + ': ' + current_weather_dict[key])
+weather_summary = weather_page.html.find('div#detailed-forecast-body')[0].text.split('\n')
+weather_summary_list = []
+for ix in range(0,len(weather_summary), 2):
+    weather_summary_list.append([weather_summary[ix], weather_summary[ix+1]])
+print('Current weather summary: ' + current_weather + ' and ' + current_temp)
+for ix in range(3):
+    item = weather_summary_list[ix]
+    print('Weather ' + item[0] +': ' + item[1])
 
 url_sunset = 'https://sunrise-sunset.org/search?location=' + str(lat) + '%2C+'+ str(long)
 sunset_page = s.get(url_sunset)
